@@ -10,23 +10,18 @@ fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
-//static HELLO: &[u8] = b"Hello World!";
-
-#[no_mangle] // ! is the never return type
+#[no_mangle]
 pub extern "C" fn _start() -> ! {
-    //let vga_buffer = 0xb8000 as *mut u8;
-    vga_text_buffer:: print_something();
-    // for (i, &byte) in HELLO.iter().enumerate() {
-    //     //!("we could create a VGA buffer type that encapsulates all unsafety and ensures that it is impossible to do anything wrong from the outside. ");
-    //     unsafe {
-    //         *vga_buffer.offset(i as isize * 2) = byte;
-    //         *vga_buffer.offset(i as isize * 2 + 1) = 0xb;
-    //     }
-    // }
+    use core::fmt::Write;
+
+    vga_text_buffer:: WRITER.lock().write_str("Hello Again").unwrap();
+    write!(vga_text_buffer::WRITER.lock(),
+    ", some numbers: {} {}",
+     42, 1.337
+    )
+    .unwrap();
 
     loop {}
 }
-// we can't use unwinding as it is dependent on some std os features
-// language features have no type checking.
 
 

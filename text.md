@@ -55,3 +55,16 @@ Volital has both read/write.
 # Formatting Macros
 
 # Static Writer
+To understand what’s happening here, we need to know that 
+## statics are initialized at compile time, 
+in contrast to normal variables that are initialized at run time. 
+The component of the Rust compiler that evaluates such initialization expressions is called the “const evaluator”. 
+Its functionality is still limited, but there is ongoing work to expand it, for example in the “Allow panicking in constants” RFC.
+
+## Use Lazy Static 
+Rust’s const evaluator is not able to convert raw pointers to references at compile time.
+ Lazy Statictic now lazily initializes itself when accessed for the first time, not at compile time.
+
+ # Spin Locks
+ there is a really basic kind of mutex in computer science that requires no operating system features: the 
+ ## spinlock
