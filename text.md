@@ -68,3 +68,7 @@ Rust’s const evaluator is not able to convert raw pointers to references at co
  # Spin Locks
  there is a really basic kind of mutex in computer science that requires no operating system features: the 
  ## spinlock
+
+ # Safety
+
+ # The #[macro_export] attribute makes the macro available to the whole crate (not just the module it is defined in) and external crates. It also places the macro at the crate root, which means we have to import the macro through use std::println instead of std::macros::println.

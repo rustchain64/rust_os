@@ -1,4 +1,4 @@
-use core::fmt::{Write, Result};
+use core::fmt::{Write, Result, Arguments};
 use lazy_static::lazy_static;
 use spin::Mutex;
 use volatile::Volatile;
@@ -125,8 +125,29 @@ impl Writer {
 
 // Write comes from core::fmt::Write
 impl Write for Writer {
+    // trait write_str calls ... we have to use : write_str becasue it is required by trait
     fn write_str(&mut self, s: &str) -> Result {
+        // our own implementation
         self.write_string(s);
         Ok(())
     }
+}
+
+// ----------------------------------------
+
+#[macro_export]
+macro_rules! print {
+    ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! println {
+    () => ($crate::print!("\n"));
+    ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+pub fn _print(args: Arguments) {
+    //use core::fmt::Write is a trait that requires write_fmt
+    WRITER.lock().write_fmt(args).unwrap();
 }
