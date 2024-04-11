@@ -72,3 +72,11 @@ Rust’s const evaluator is not able to convert raw pointers to references at co
  # Safety
 
  # The #[macro_export] attribute makes the macro available to the whole crate (not just the module it is defined in) and external crates. It also places the macro at the crate root, which means we have to import the macro through use std::println instead of std::macros::println.
+
+# VGA text buffer and how it can be written through the memory mapping at address 0xb8000.
+ We created a Rust module that encapsulates the unsafety of writing to this memory-mapped buffer and presents a safe and convenient interface to the outside.
+
+## dependencies 
+ lazy_static and 
+ spin, ( a form of Mutex)
+ are very useful in OS 
