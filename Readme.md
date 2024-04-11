@@ -1,5 +1,4 @@
-# Refernece
-os.phil-opp.com/freestanding-rust-binary/
+# Taking on RTOS vs Rust Bare Metal OS and Asynchronous
 
 # To build without error have no underlying os
 rustup target add thumbv7em-none-eabihf
