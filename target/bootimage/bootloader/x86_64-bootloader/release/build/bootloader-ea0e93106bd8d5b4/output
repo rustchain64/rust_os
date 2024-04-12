@@ -1,7 +1,7 @@
-cargo:rerun-if-changed=/home/wparr/Projects/rust_mentor/embedded/rust_os/rust_os/Cargo.toml
-cargo:rustc-link-search=native=/home/wparr/Projects/rust_mentor/embedded/rust_os/rust_os/target/bootimage/bootloader/x86_64-bootloader/release/build/bootloader-ea0e93106bd8d5b4/out
-cargo:rustc-link-lib=static=kernel_bin-rust_os
+cargo:rerun-if-changed=/home/wparr/Projects/rust_mentor/embedded/rust_os/rust_os_back/Cargo.toml
+cargo:rustc-link-search=native=/home/wparr/Projects/rust_mentor/embedded/rust_os/rust_os_back/target/bootimage/bootloader/x86_64-bootloader/release/build/bootloader-ea0e93106bd8d5b4/out
+cargo:rustc-link-lib=static=kernel_bin-rust_os-5313c7f169427f2f
 cargo:rerun-if-env-changed=KERNEL
 cargo:rerun-if-env-changed=KERNEL_MANIFEST
-cargo:rerun-if-changed=/home/wparr/Projects/rust_mentor/embedded/rust_os/rust_os/target/x86_64-rust_os/debug/rust_os
+cargo:rerun-if-changed=/home/wparr/Projects/rust_mentor/embedded/rust_os/rust_os_back/target/x86_64-rust_os/debug/deps/rust_os-5313c7f169427f2f
 cargo:rerun-if-changed=build.rs
