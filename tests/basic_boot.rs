@@ -1,37 +1,33 @@
 #![no_std]
 #![no_main]
 #![feature(custom_test_frameworks)]
+//#![test_runner(crate::test_runner)]
 #![test_runner(rust_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-use rust_os::println;
 use core::panic::PanicInfo;
+use rust_os::println;
 
-#[no_mangle]
+#[no_mangle] // don't mangle the name of this function, also test is outside main
 pub extern "C" fn _start() -> ! {
-    
-    #[cfg(test)]
     test_main();
 
     #[allow(clippy::empty_loop)]
     loop {}
 }
 
-/// Called on panic.
-#[cfg(not(test))]
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    println!("{}", info);
-    loop {}
-}
-
-#[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     rust_os::test_panic_handler(info)
 }
 
+/*
+    By testing println in a basic_boot environment without 
+    calling _start init routines, 
+    we affirm println works right at boot.
+*/
+
 #[test_case]
-fn trivial_assertion() {
-    assert_eq!(1, 1);
+fn test_println() {
+    println!("test_println output");
 }

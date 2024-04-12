@@ -151,3 +151,31 @@ pub fn _print(args: Arguments) {
     //use core::fmt::Write is a trait that requires write_fmt
     WRITER.lock().write_fmt(args).unwrap();
 }
+
+#[test_case]
+fn test_println_simple() {
+    println!("test_println_simple output");
+}
+
+#[test_case]
+fn test_println_many() {
+    for _ in 0..200 {
+        println!("test_println_many output");
+    }
+}
+
+#[test_case]
+fn test_println_output() {
+    let s = "Some test string that fits on a single line";
+    println!("{s}");
+    for (i, c) in s.chars().enumerate() {
+        let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][i].read();
+        assert_eq!(char::from(screen_char.ascii_character), c);
+    }
+}
+/*
+    TODO function that tests that no panic occurs when 
+    printing very long lines and that they’re wrapped correctly, 
+    or a function for testing that newlines, non-printable characters, 
+    and non-unicode characters are handled correctly.
+*/

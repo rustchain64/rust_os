@@ -43,5 +43,42 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
 
 We will use the uart_16550 crate to initialize the UART and send data over the serial port. To add it as a dependency, we update our Cargo.toml and main.rs:
 
-# Print to consolde
+# Print to console
 
+# Integration tests
+Test different components working together.
+
+## each test needs to define its own entry point function
+/tests
+    basic_boot.rs
+
+# We don’t need any cfg(test) attributes because 
+integration test executables are never built in non-test mode.
+
+## Integration Tests Are all Seperate Executables
+we need to provide all the create attributes again
+Create What Attributes?
+(no_std, no_main, test_runner, etc.) and _start()
+
+# Create a library lib.rs
+Is picked up by Cargo in the same way /tests are picked up
+
+# Integration tests
+Integration Tests are completely separate executables. 
+Giving them complete control over the environment, 
+makes it possible to test that the code 
+interacts correctly with the CPU or hardware devices.
+
+## FUTURE TESTS FOR INTEGRTATION while adding Features to the Kernal
+### CPU Exceptions: 
+When the code performs invalid operations (e.g., divides by zero), the CPU throws an exception. The kernel can register handler functions for such exceptions. An integration test could verify that the correct exception handler is called when a CPU exception occurs or that the execution continues correctly after a resolvable exception.
+### Page Tables: 
+Page tables define which memory regions are valid and accessible. By modifying the page tables, it is possible to allocate new memory regions, for example when launching programs. An integration test could modify the page tables in the _start function and verify that the modifications have the desired effects in #[test_case] functions.
+### Userspace Programs: 
+Userspace programs are programs with limited access to the system’s resources. For example, they don’t have access to kernel data structures or to the memory of other programs. An integration test could launch userspace programs that perform forbidden operations and verify that the kernel prevents them all.
+
+# TEST SHOULD PANIC
+Sorry not available in [no_std]
+
+# run integration tests
+cargo test --test should_panic VS cargo test
