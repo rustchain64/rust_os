@@ -45,6 +45,9 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
 #[cfg(test)]
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    // while "cargo test"
+    // rust tests lib seprate from main so we call init() from here as well.
+    init();
     test_main();
     loop {}
 }
