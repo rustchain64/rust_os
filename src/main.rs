@@ -9,9 +9,17 @@ use core::panic::PanicInfo;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    
+    println!("Hello World!");
+    // call init within lib.rs on start
+    rust_os::init();
+
+    // >>>> BREAKPOINT exception ... int3 is for a breakpoint
+    x86_64::instructions::interrupts::int3();
+
     #[cfg(test)]
     test_main();
+
+    println!("It did not crash!");
 
     #[allow(clippy::empty_loop)]
     loop {}
