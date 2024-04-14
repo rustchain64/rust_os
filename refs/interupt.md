@@ -79,3 +79,16 @@ Its only purpose is to temporarily pause a program when the
 breakpoint instruction int3 is executed.
 
 When the user sets a breakpoint, the debugger overwrites the corresponding instruction with the int3 instruction so that the CPU throws the breakpoint exception when it reaches that line. When the user wants to continue the program, the debugger replaces the int3 instruction with the original instruction again and continues the program. For more details, see the “How debuggers work” series.
+
+## The x86-interrupt calling convention and the InterruptDescriptorTable
+
+# int3 function
+#[test_case]
+fn test_breakpoint_exeption() {
+     // >>>> BREAKPOINT exception ... this is for test not actual breakpoint in main
+     x86_64::instructions::interrupts::int3();
+}
+
+# TOO MUCH MAGIC
+## GO NAKED
+see naked.md
