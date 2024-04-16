@@ -149,7 +149,13 @@ macro_rules! println {
 #[doc(hidden)]
 pub fn _print(args: Arguments) {
     //use core::fmt::Write is a trait that requires write_fmt
-    WRITER.lock().write_fmt(args).unwrap();
+    //use core::fmt::Write; from the top
+    use x86_64::instructions::interrupts;
+
+    //function takes a closure and executes it in an interrupt-free environment.
+    interrupts::without_interrupts(|| {
+        WRITER.lock().write_fmt(args).unwrap();
+    });
 }
 
 #[test_case]

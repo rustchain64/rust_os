@@ -119,3 +119,25 @@ The default configuration of the PICs is not usable because it sends interrupt v
 
 # AFTER EXCEPTION SLOTS
 not overlap with the exceptions, but typically the range of 32–47 is chosen
+
+
+# Configure the Timer PIT
+https://wiki.osdev.org/Programmable_Interval_Timer
+
+# Deadlocks
+
+We now have a form of concurrency in our kernel: The timer interrupts occur asynchronously, so they can interrupt our _start function at any time. Fortunately, Rust’s ownership system prevents many types of concurrency-related bugs at compile time. One notable exception is deadlocks. Deadlocks occur if a thread tries to acquire a lock that will never become free. Thus, the thread hangs indefinitely.
+
+We can already provoke a deadlock in our kernel. Remember, our println macro calls the vga_buffer::_print function, which locks a global WRITER using a spinlock:
+
+// in src/vga_buffer.rs
+
+[…]
+
+#[doc(hidden)]
+pub fn _print(args: fmt::Arguments) {
+    use core::fmt::Write;
+    WRITER.lock().write_fmt(args).unwrap();
+}
+
+The WRITER is locked, so the interrupt handler waits until it becomes free. But this never happens, because the _start function only continues to run after the interrupt handler returns. Thus, the entire system hangs.

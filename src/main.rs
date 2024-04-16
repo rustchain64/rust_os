@@ -18,8 +18,11 @@ pub extern "C" fn _start() -> ! {
 
     println!("It did not crash!");
 
-    #[allow(clippy::empty_loop)]
-    loop {}
+    //#[allow(clippy::empty_loop)]
+    loop {
+        use rust_os::print;
+        print!("-"); 
+    }
 }
 
 /// Called on panic.

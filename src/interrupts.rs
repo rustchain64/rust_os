@@ -1,4 +1,4 @@
-use crate::{gdt, println};
+use crate::{gdt, println, print};
 use lazy_static::lazy_static;
 use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
 use pic8259::ChainedPics;
@@ -8,6 +8,34 @@ use spin;
 // IDT
 // ----------------------------------------------------------------
 
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum InterruptIndex {
+    Timer = PIC_1_OFFSET,
+}
+
+// impl InterruptIndex {
+//     fn as_u8(self) -> u8 {
+//         self as u8
+//     }
+
+//     fn as_usize(self) -> usize {
+//         usize::from(self.as_u8())
+//     }
+// }
+
+impl From<InterruptIndex> for u8 {
+    fn from(ii: InterruptIndex) -> Self {
+        ii as u8
+    }
+}
+
+impl From<InterruptIndex> for usize {
+    fn from(ii: InterruptIndex) -> Self {
+        ii as usize
+    }
+}
+
 lazy_static! {
     static ref IDT: InterruptDescriptorTable = {
         let mut idt = InterruptDescriptorTable::new();
@@ -16,6 +44,13 @@ lazy_static! {
             idt.double_fault.set_handler_fn(double_fault_handler)
             .set_stack_index(gdt::DOUBLE_FAULT_IST_INDEX);
         }
+        // idt[InterruptIndex::Timer.as_usize()]
+        //     .set_handler_fn(timer_interrupt_handler);
+
+        //The InterruptDescriptorTable struct implements the IndexMut trait, 
+        //so we can access individual entries through array indexing syntax.
+        idt[InterruptIndex::Timer.into()].set_handler_fn(timer_interrupt_handler);
+
         idt
     };
 }
@@ -49,18 +84,11 @@ pub const PIC_2_OFFSET: u8 = PIC_1_OFFSET + 8;
 pub static PICS: spin::Mutex<ChainedPics> =
     spin::Mutex::new(unsafe { ChainedPics::new(PIC_1_OFFSET, PIC_2_OFFSET) });
 
-#[derive(Debug, Clone, Copy)]
-#[repr(u8)]
-pub enum InterruptIndex {
-    Timer = PIC_1_OFFSET,
-}
+extern "x86-interrupt" fn timer_interrupt_handler(_stack_frame: InterruptStackFrame)
+{
+    print!(".");
 
-impl InterruptIndex {
-    fn as_u8(self) -> u8 {
-        self as u8
-    }
-
-    fn as_usize(self) -> usize {
-        usize::from(self.as_u8())
+    unsafe {
+        PICS.lock().notify_end_of_interrupt(InterruptIndex::Timer.into());
     }
 }
