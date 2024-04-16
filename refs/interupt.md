@@ -141,3 +141,35 @@ pub fn _print(args: fmt::Arguments) {
 }
 
 The WRITER is locked, so the interrupt handler waits until it becomes free. But this never happens, because the _start function only continues to run after the interrupt handler returns. Thus, the entire system hangs.
+
+# RACE CONDITION
+
+> cargo test --lib
+[…]
+Running 4 tests
+test_breakpoint_exception...[ok]
+test_println... [ok]
+test_println_many... [ok]
+test_println_output... [failed]
+
+Error: panicked at 'assertion failed: `(left == right)`
+  left: `'.'`,
+ right: `'S'`', src/vga_buffer.rs:205:9
+
+ ## Race condition between test and timer handler. The test looks like this:
+
+// in src/vga_buffer.rs
+
+#[test_case]
+fn test_println_output() {
+    let s = "Some test string that fits on a single line";
+    println!("{}", s);
+    for (i, c) in s.chars().enumerate() {
+        let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][i].read();
+        assert_eq!(char::from(screen_char.ascii_character), c);
+    }
+}
+
+# HLT hault put CPU to sleep in betweern interrupts
+
+halt the CPU until the next interrupt arrives. This allows the CPU to enter a sleep state in which it consumes much less energy.
