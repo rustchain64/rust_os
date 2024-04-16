@@ -92,3 +92,30 @@ fn test_breakpoint_exeption() {
 # TOO MUCH MAGIC
 ## GO NAKED
 see naked.md
+
+### ////////////////////////////////////////////////////////////////////////////////
+# PIC 5259  pic new ( start ) --> APIC ( upgrade )
+Intel 5259 Progammable interrupt controller (PIC)
+
+Connecting all hardware devices directly to the CPU is not possible. Instead, a separate interrupt controller aggregates the interrupts from all devices and then notifies the CPU:
+
+## HARDWARE INTERUPTS OCCUR ASYNCRONOUSLY 
+### INTERUPT CONTORLLERS
+Priorities:
+Timers
+Keypoard
+
+# Conrrency Related Bugs.
+Dead Locks
+
+ownership model helps us here because it forbids mutable global state
+
+This graphic shows the typical assignment of interrupt lines. We see that most of the 15 lines have a fixed mapping, e.g., line 4 of the secondary PIC is assigned to the mouse.
+
+Each controller can be configured through two I/O ports, one “command” port and one “data” port. For the primary controller, these ports are 0x20 (command) and 0x21 (data). For the secondary controller, they are 0xa0 (command) and 0xa1 (data). For more information on how the PICs can be configured, see the article on osdev.org.
+
+# Due to Overlap: Must remap the PIC interrupts to different numbers
+The default configuration of the PICs is not usable because it sends interrupt vector numbers in the range of 0–15 to the CPU. These numbers are already occupied by CPU exceptions. For example, number 8 corresponds to a double fault.
+
+# AFTER EXCEPTION SLOTS
+not overlap with the exceptions, but typically the range of 32–47 is chosen
