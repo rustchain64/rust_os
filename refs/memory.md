@@ -75,3 +75,28 @@ This post introduced two memory protection techniques: segmentation and paging. 
 Paging stores the mapping information for pages in page tables with one or more levels. The x86_64 architecture uses 4-level page tables and a page size of 4 KiB. The hardware automatically walks the page tables and caches the resulting translations in the translation lookaside buffer (TLB). This buffer is not updated transparently and needs to be flushed manually on page table changes.
 
 We learned that our kernel already runs on top of paging and that illegal memory accesses cause page fault exceptions. We tried to access the currently active page tables, but we weren’t able to do it because the CR3 register stores a physical address that we can’t access directly from our kernel.
+
+# Using OffsetPageTable
+Translating virtual to physical addresses is a common task in an OS kernel, therefore the x86_64 crate provides an abstraction for it. The implementation already supports huge pages and several other page table functions apart from translate_addr, so we will use it in the following instead of adding huge page support to our own implementation.
+
+At the basis of the abstraction are two traits that define various page table mapping functions:
+The 
+Mapper trait is generic over the page size and provides functions that operate on pages. 
+
+Examples are translate_page, 
+which translates a given page to a frame of the same size, 
+
+and map_to, which creates a new mapping in the page table.
+The Translate trait provides functions that work with multiple page sizes, such as 
+translate_addr 
+or the general translate.
+
+# The traits only define the interface, they don’t provide any implementation. 
+The x86_64 crate currently provides three types that implement the traits with different requirements. The 
+
+## OffsetPageTable 
+type assumes that the complete physical memory is mapped to the virtual address space at some offset. 
+## MappedPageTable 
+is a bit more flexible: It only requires that each page table frame is mapped to the virtual address space at a calculable address. Finally, the 
+## RecursivePageTable 
+type can be used to access page table frames through recursive page tables.
