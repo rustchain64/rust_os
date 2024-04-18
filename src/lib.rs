@@ -5,11 +5,15 @@
 #![reexport_test_harness_main = "test_main"]
 #![feature(abi_x86_interrupt)]
 
+#[cfg(test)]
+use bootloader::{BootInfo, entry_point};
+
 use core::panic::PanicInfo;
 pub mod serial;
 pub mod vga_text_buffer;
 pub mod interrupts;
 pub mod gdt;
+pub mod memory;
 
 
 pub trait Testable {
@@ -50,8 +54,10 @@ pub fn hlt_loop() -> ! {
 
 /// Entry point for `cargo test`
 #[cfg(test)]
-#[no_mangle]
-pub extern "C" fn _start() -> ! {
+entry_point!(test_kernel_main);
+
+#[cfg(test)]
+fn test_kernel_main(_boot_info: &'static BootInfo) -> ! {
     // while "cargo test"
     // rust tests lib seprate from main so we call init() from here as well.
     init();

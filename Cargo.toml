@@ -3,8 +3,8 @@ name = "rust_os"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
-bootloader = "0.9.22"
+[dependencies] # 0.9.8
+bootloader = { version = "0.9.22", features = ["map_physical_memory"]}
 pic8259 = "0.10.1"
 pc-keyboard = "0.5.0"
 volatile = "=0.2.6"
