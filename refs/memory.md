@@ -100,3 +100,10 @@ type assumes that the complete physical memory is mapped to the virtual address 
 is a bit more flexible: It only requires that each page table frame is mapped to the virtual address space at a calculable address. Finally, the 
 ## RecursivePageTable 
 type can be used to access page table frames through recursive page tables.
+
+# With the boot info frame allocator, the mapping succeeds and we see the black-on-white “New!” on the screen again. Behind the scenes, the map_to method creates the missing page tables in the following way:
+
+Use the passed frame_allocator to allocate an unused frame.
+Zero the frame to create a new, empty page table.
+Map the entry of the higher level table to that frame.
+Continue with the next table level.
