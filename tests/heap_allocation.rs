@@ -29,13 +29,6 @@ fn main(boot_info: &'static BootInfo) -> ! {
     loop {}
 }
 
-// THIS SHOULD BE DELETED FROM SKELETON
-
-// #[no_mangle]
-// pub extern "C" fn _start() -> ! {
-//     unimplemented!();
-// }
-
 use alloc::boxed::Box;
 
 #[test_case]
