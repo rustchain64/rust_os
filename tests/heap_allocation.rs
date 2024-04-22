@@ -76,7 +76,29 @@ fn many_boxes() {
 }
 
 /*
+    above
+    allocate and free
+    allocate and free
     ensures that the allocator reuses freed memory
+    bump allocator does not do this
+*/
+
+// #[test_case]
+// fn many_boxes_long_lived(){
+//     let long_lived = Box::new(1);
+//     for i in 0..HEAP_SIZE {
+//         let x = Box::new(i);
+//         assert_eq!(*x, i);
+//     }
+//     assert_eq!(*long_lived, 1);
+// }
+
+/*
+    above
+    let long_lived = Box::new(1);
+    allocate and free
+    allocate and free
+    ensures that the allocator RUNS OUT OF MEMORY
     bump allocator does not do this
 */
 
