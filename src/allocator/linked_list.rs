@@ -2,6 +2,9 @@ use super::{align_up, Locked};
 use alloc::alloc::{GlobalAlloc, Layout};
 use core::{mem, ptr};
 
+////////////////// WARNING THIS DOES NOT MERGER FREED BLOCKS \\\\\\\\\\\\\\\\\\\\
+/// ////////////////// USE : linked_list_allocator \\\\\\\\\\\\\\\\\\\\
+
 unsafe impl GlobalAlloc for Locked<LinkedListAllocator> {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
         // perform layout adjustments

@@ -6,6 +6,13 @@
 #![reexport_test_harness_main = "test_main"]
 #![feature(const_mut_refs)]
 
+/*
+    #![feature(const_mut_refs)]
+    use of mutable reference types in const functions is still unstable, 
+    including the Option<&'static mut ListNode> array element type of the 
+    list_heads field (even if we set it to None).
+*/
+
 extern crate alloc;
 use core::panic::PanicInfo;
 
