@@ -1,6 +1,8 @@
+pub mod keyboard;
+pub mod simple_executor;
+
 use core::{future::Future, pin::Pin, task::{Context, Poll}};
 use alloc::boxed::Box;
-pub mod simple_executor;
 
 pub struct Task {
     future: Pin<Box<dyn Future<Output = ()>>>,

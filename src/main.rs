@@ -6,7 +6,9 @@
 
 extern crate alloc;
 
-use rust_os::{println, task::{simple_executor::SimpleExecutor, Task}};
+use rust_os::{println, 
+    task::{keyboard, simple_executor::SimpleExecutor, Task}
+};
 use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
 
@@ -29,6 +31,7 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     let mut executor = SimpleExecutor::new();
     // wrat in a  TAsk type, which moves to the heap and pins it
     executor.spawn(Task::new(example_task())); // async functions returns a future object
+    executor.spawn(Task::new(keyboard::print_keypress())); // async functions returns a future object
     executor.run();    
 
     #[cfg(test)]
